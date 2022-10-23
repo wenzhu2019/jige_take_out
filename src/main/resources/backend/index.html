@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<style>
+  html,
+  body,
+  #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
+  }
+
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+  }
+
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
+
+  body > .el-container {
+    margin-bottom: 40px;
+    height:100%;
+  }
+
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
+  .home-container {
+    height:100%;
+  }
+
+</style>
+<body>
+<div id="app">
+  <el-container class="home-container">
+    <el-header>
+      <div class="logo">
+        <img src="images/login/login-logo.png" alt="" style="width: 117px; height: 32px" />
+      </div>
+      <el-button type="primary" @click="logout">退出</el-button>
+    </el-header>
+    <el-container>
+      <el-aside width="200px">
+        <el-menu :default-openeds="['1', '3']">
+          <!--这里绑定index不支持数值类型 否则前端报vue异常 但是可以正常显示-->
+          <!--显示一级菜单-->
+          <el-submenu :index="item.menuid+''" v-for="item in items" :key="item.menuid">
+            <template slot="title"><i class="el-icon-message"></i>{{item.menuName}}</template>
+            <!--遍历一级菜单取二级菜单-->
+            <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid">
+              <template slot="title">{{nextitem.menuName}}</template>
+              <!--遍历二级菜单取三级菜单-->
+              <el-menu-item :index="finalitem.menuid+''" v-for="finalitem in nextitem.nextMenu" :key="finalitem.menuid">{{finalitem.menuName}}</el-menu-item>
+            </el-submenu>
+          </el-submenu>
+        </el-menu>
+
+      </el-aside>
+      <el-main>Main</el-main>
+    </el-container>
+  </el-container>
+</div>
+</body>
+<!-- import Vue before Element -->
+<!--<script src="https://unpkg.com/vue@2/dist/vue.js"></script>-->
+<script src="plugins/vue/vue.js"></script>
+<!-- import JavaScript -->
+<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+<script src="plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="plugins/axios/axios.min.js"></script>
+<!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        loginForm:{
+          username: 'admin',
+          password: '123456'
+        },
+        loading: false,
+        items: [],
+        userId: {
+          userId: "admin"
+        }
+      }
+    },
+    computed: {
+    },
+    created() {
+      this.getMenuList();
+
+    },
+    methods: {
+    logout() {
+      console.log("退出了！")
+    },
+      // 根据角色权限显示不同页面
+      getMenuList() {
+        let that = this;
+        // 取出登录成功存入缓存中的角色id
+        let userId = localStorage.getItem('userId');
+        that.userId.userId = userId;
+        axios.post('/menu/getMenuList', that.userId)
+                .then(function(res) {
+                  console.log(res);
+                  debugger;
+                  that.items = res.data.data;
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
+      }
+    }
+  })
+</script>
+<style lang="less" scoped>
+
+</style>
+</html>
