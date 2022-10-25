@@ -67,16 +67,27 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu :default-openeds="['1', '3']">
+        <el-menu :default-openeds="['10']"
+                 :default-active="1010"
+                 :unique-opened="true"
+                 active-text-color="#ee9900"
+        >
           <!--这里绑定index不支持数值类型 否则前端报vue异常 但是可以正常显示-->
           <!--显示一级菜单-->
-          <el-submenu :index="item.menuid+''" v-for="item in items" :key="item.menuid">
+          <el-submenu :index="item.menuid+''"
+                      v-for="item in items"
+                      :key="item.menuid"
+                      @click="menuGroup(item)">
             <template slot="title"><i class="el-icon-message"></i>{{item.menuName}}</template>
             <!--遍历一级菜单取二级菜单-->
             <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid">
               <template slot="title">{{nextitem.menuName}}</template>
               <!--遍历二级菜单取三级菜单-->
-              <el-menu-item :index="finalitem.menuid+''" v-for="finalitem in nextitem.nextMenu" :key="finalitem.menuid">{{finalitem.menuName}}</el-menu-item>
+              <el-menu-item :index="finalitem.menuid+''"
+                            v-for="finalitem in nextitem.nextMenu"
+                            :key="finalitem.menuid"
+                            @click="menuHandle(finalitem)"
+              >{{finalitem.menuName}}</el-menu-item>
             </el-submenu>
           </el-submenu>
         </el-menu>
@@ -91,7 +102,7 @@
           </el-breadcrumb>
         </div>
         <div>
-          <iframe src="page/member/list.html"
+          <iframe :src="iframeUrl"
                   id="cIframe"
                   class="c_iframe"
                   name="cIframe"
@@ -101,7 +112,7 @@
                   v-show="!loading"
           ></iframe>
         </div>
-        //TODO 这里只放主页 数据放到具体每个list
+        <!--TODO 这里只放主页 数据放到具体每个list-->
 <!--
         <div>
           <template>
@@ -173,6 +184,7 @@
     el: '#app',
     data() {
       return {
+        defAct: '2',
         loginForm:{
           username: 'admin',
           password: '123456'
@@ -182,6 +194,9 @@
         userId: {
           userId: "admin"
         },
+        menuActived:'',
+        menuGroupActive:'',
+        iframeUrl: '',
         tableData: [{
           date: '2016-05-02',
           name: '王小虎',
@@ -217,6 +232,27 @@
                 .catch(function(error) {
                   console.log(error);
                 });
+      },
+      menuHandle(item) {
+      debugger;
+        this.loading = true
+        this.menuActived = item.menuid+""
+        this.iframeUrl = item.url
+        console.log(this.menuActived+"------------------")
+        //this.closeLoading(this.iframeUrl+"******************")
+      },
+      menuGroup(item) {
+
+        this.menuGroupActive = item.menuid
+        this.iframeUrl = item.url
+        console.log("------------------")
+        //this.closeLoading(this.iframeUrl+"******************")
+      },
+      closeLoading(){
+        this.timer = null
+        this.timer = setTimeout(()=>{
+          this.loading = false
+        },1000)
       }
     }
   })
