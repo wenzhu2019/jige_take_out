@@ -63,6 +63,14 @@
       <div class="logo">
         <img src="images/login/login-logo.png" alt="" style="width: 117px; height: 32px" />
       </div>
+      <div>
+        <el-button
+                plain
+                @click="open">
+          欢迎您！{{userInfo.name}}
+        </el-button>
+<!--        <span>欢迎您！{{userInfo.name}}</span>-->
+      </div>
       <el-button type="primary" @click="logout">退出</el-button>
     </el-header>
     <el-container>
@@ -177,6 +185,7 @@
 <script src="plugins/element-ui/index.js"></script>
 <!-- 引入axios -->
 <script src="plugins/axios/axios.min.js"></script>
+<script src="api/login.js"></script>
 <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
 <script>
   new Vue({
@@ -191,6 +200,7 @@
         },
         loading: false,
         items: [],
+        userInfo: {},
         userId: {
           userId: "admin",
           employeeId:'666666'
@@ -211,13 +221,15 @@
     computed: {
     },
     created() {
+      //通过登录的页面缓存中的userInfo设置全局用户
+      const userInfo = window.localStorage.getItem('userInfo')
+      if (userInfo) {
+        this.userInfo = JSON.parse(userInfo)
+      }
       this.getMenuList();
 
     },
     methods: {
-    logout() {
-      console.log("退出了！")
-    },
       // 根据角色权限显示不同页面
       getMenuList() {
         let that = this;
@@ -227,7 +239,6 @@
         axios.post('/menu/getMenuList', that.userId)
                 .then(function(res) {
                   console.log(res);
-                  debugger;
                   that.items = res.data.data;
                 })
                 .catch(function(error) {
@@ -246,6 +257,33 @@
         this.timer = setTimeout(()=>{
           this.loading = false
         },1000)
+      },
+      open() {
+        const h = this.$createElement;
+        this.$notify({
+          title: '登录成功！',
+          duration:800,
+          message: h('i', { style: 'color: teal'}, '欢迎登录吉格外卖管理系统！')
+        });
+      },
+      logout() {
+        axios.post("/employee/logout",this.userInfo).then(function (res){
+          //回调函数
+          if (res.code ==1){
+            localStorage.removeItem("userInfo")
+            window.location.href="/backend/page/login/login.html"
+          }
+        }).catch(function (error){
+          //接口异常回调
+          console.log(error)
+        })
+        /*
+        logoutApi().then((res)=>{
+          if(res.code === 1){
+            localStorage.removeItem('userInfo')
+            window.location.href = '/backend/page/login/login.html'
+          }
+        })*/
       }
     }
   })
