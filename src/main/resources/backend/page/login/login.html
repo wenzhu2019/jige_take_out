@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>瑞吉外卖管理端</title>
-  <link rel="shortcut icon" href="../../favicon.ico">
+  <title>吉格外卖管理端</title>
+  <link rel="shortcut icon" href="../../A.ico">
   <!-- 引入样式 -->
   <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
   <link rel="stylesheet" href="../../styles/common.css">
@@ -28,8 +28,8 @@
           <div class="login-form-title">
             <img src="../../images/login/logo.png" style="width:139px;height:42px;" alt="" />
           </div>
-          <el-form-item prop="username">
-            <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" maxlength="20"
+          <el-form-item prop="employeeId">
+            <el-input v-model="loginForm.employeeId" type="text" auto-complete="off" placeholder="账号" maxlength="20"
               prefix-icon="iconfont icon-user" />
           </el-form-item>
           <el-form-item prop="password">
@@ -65,7 +65,8 @@
         return {
           loginForm:{
             username: 'admin',
-            password: '123456'
+            password: '123456',
+            employeeId:'666666'
           },
           loading: false
         }
@@ -88,6 +89,7 @@
           }
           return {
             'username': [{ 'validator': validateUsername, 'trigger': 'blur' }],
+            'employeeId': [{ 'validator': validateUsername, 'trigger': 'blur' }],
             'password': [{ 'validator': validatePassword, 'trigger': 'blur' }]
           }
         }

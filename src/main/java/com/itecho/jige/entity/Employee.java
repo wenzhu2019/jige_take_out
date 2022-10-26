@@ -2,6 +2,7 @@ package com.itecho.jige.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +21,8 @@ public class Employee implements Serializable {
 
     private String name;
 
+    //用户密码不传回前段
+    @JsonIgnore
     private String password;
 
     private String phone;
@@ -29,6 +32,8 @@ public class Employee implements Serializable {
     private String idNumber;//身份证号码
 
     private Integer status;
+    //员工号
+    private Integer employeeId;
 
     @TableField(fill = FieldFill.INSERT) //插入时填充字段
     private LocalDateTime createTime;

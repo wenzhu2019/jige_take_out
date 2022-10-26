@@ -34,9 +34,9 @@ public class EmployeeController {
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
 
-        //2、根据页面提交的用户名username查询数据库
+        //2、根据页面提交的员工编号查询数据库
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getUsername,employee.getUsername());
+        queryWrapper.eq(Employee::getEmployeeId,employee.getEmployeeId());
         Employee emp = employeeService.getOne(queryWrapper);
 
         //3、如果没有查询到则返回登录失败结果
