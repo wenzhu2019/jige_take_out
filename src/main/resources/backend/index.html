@@ -108,7 +108,7 @@
             <el-breadcrumb-item>活动列表</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <div>
+        <div class="app-main">
           <iframe :src="iframeUrl"
                   id="cIframe"
                   class="c_iframe"
@@ -194,20 +194,13 @@
       return {
         defAct: '2',
         loginForm:{
-          username: 'admin',
-          employeeId:'666666',
-          password: '123456'
         },
         loading: false,
         items: [],
         userInfo: {},
-        userId: {
-          userId: "admin",
-          employeeId:'666666'
-        },
         menuActived:'',
         menuGroupActive:'',
-        iframeUrl: '',
+        iframeUrl: 'page/member/list.html',
         tableData: [{
           date: '2016-05-02',
           name: '王小虎',
@@ -220,7 +213,12 @@
     },
     computed: {
     },
+    mounted(){
+      //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
+      window.menuHandle = this.menuHandle
+    },
     created() {
+      //created 即通常初始化某些属性值，然后再渲染成视图
       //通过登录的页面缓存中的userInfo设置全局用户
       const userInfo = window.localStorage.getItem('userInfo')
       if (userInfo) {
@@ -234,9 +232,8 @@
       getMenuList() {
         let that = this;
         // 取出登录成功存入缓存中的角色id
-        let userId = localStorage.getItem('userId');
-        that.userId.userId = userId;
-        axios.post('/menu/getMenuList', that.userId)
+        let userInfo = localStorage.getItem('userInfo');
+        axios.post('/menu/getMenuList', userInfo.userId)
                 .then(function(res) {
                   console.log(res);
                   that.items = res.data.data;
@@ -246,7 +243,8 @@
                 });
       },
       menuHandle(item) {
-        this.loading = true
+        //可以控制iframe的显示和隐藏 这里不改变一直显示就可以
+        //this.loading = true
         this.menuActived = item.menuid+""
         this.iframeUrl = item.url
         console.log(this.menuActived+"------------------")

@@ -64,7 +64,6 @@
       data() {
         return {
           loginForm:{
-            username: 'admin',
             password: '123456',
             employeeId:'666666'
           },
@@ -73,9 +72,9 @@
       },
       computed: {
         loginRules() {
-          const validateUsername = (rule, value, callback) => {
+          const validateAccout = (rule, value, callback) => {
             if (value.length < 1 ) {
-              callback(new Error('请输入用户名'))
+              callback(new Error('请输入账号'))
             } else {
               callback()
             }
@@ -88,8 +87,7 @@
             }
           }
           return {
-            'username': [{ 'validator': validateUsername, 'trigger': 'blur' }],
-            'employeeId': [{ 'validator': validateUsername, 'trigger': 'blur' }],
+            'employeeId': [{ 'validator': validateAccout, 'trigger': 'blur' }],
             'password': [{ 'validator': validatePassword, 'trigger': 'blur' }]
           }
         }

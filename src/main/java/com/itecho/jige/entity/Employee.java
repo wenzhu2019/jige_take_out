@@ -21,8 +21,8 @@ public class Employee implements Serializable {
 
     private String name;
 
-    //用户密码不传回前段
-    @JsonIgnore
+    //用户密码不传回前段 加上后 也不能传进来 只能在封装R那里做处理
+    //@JsonIgnore
     private String password;
 
     private String phone;
