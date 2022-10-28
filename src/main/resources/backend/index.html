@@ -88,10 +88,10 @@
           <el-submenu :index="item.menuid+''"
                       v-for="item in items"
                       :key="item.menuid"
-                      @click="menuGroup(item)">
+                      @click="menuHandle(item)">
             <template slot="title"><i class="el-icon-message"></i>{{item.menuName}}</template>
             <!--遍历一级菜单取二级菜单-->
-            <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid">
+            <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid" @click="setSecondMenu(nextitem)">
               <template slot="title">{{nextitem.menuName}}</template>
               <!--遍历二级菜单取三级菜单-->
               <el-menu-item :index="finalitem.menuid+''"
@@ -107,7 +107,7 @@
       <el-main>
         <div>
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/' }">{{activeMenu.firstMenu.menuName}}</el-breadcrumb-item>
             <el-breadcrumb-item>活动管理</el-breadcrumb-item>
             <el-breadcrumb-item>活动列表</el-breadcrumb-item>
           </el-breadcrumb>
@@ -123,58 +123,6 @@
                   v-show="!loading"
           ></iframe>
         </div>
-        <!--TODO 这里只放主页 数据放到具体每个list-->
-<!--
-        <div>
-          <template>
-            <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%">
-              <el-table-column
-                      fixed
-                      prop="date"
-                      label="日期"
-                      width="150">
-              </el-table-column>
-              <el-table-column
-                      prop="name"
-                      label="姓名"
-                      width="120">
-              </el-table-column>
-              <el-table-column
-                      prop="province"
-                      label="省份"
-                      width="120">
-              </el-table-column>
-              <el-table-column
-                      prop="city"
-                      label="市区"
-                      width="120">
-              </el-table-column>
-              <el-table-column
-                      prop="address"
-                      label="地址"
-                      width="300">
-              </el-table-column>
-              <el-table-column
-                      prop="zip"
-                      label="邮编"
-                      width="120">
-              </el-table-column>
-              <el-table-column
-                      fixed="right"
-                      label="操作"
-                      width="100">
-                <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                  <el-button type="text" size="small">编辑</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
-        </div>
--->
 
       </el-main>
     </el-container>
@@ -203,16 +151,20 @@
         items: [],
         userInfo: {},
         menuActived:'',
-        menuGroupActive:'',
-        iframeUrl: 'page/member/list.html',
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+        activeMenu:{
+          firstMenu:{
+            menuId:'',
+            menuName:''
+          },
+          secondMenu:{
+            menuId:'',
+            menuName:''},
+          thirdMenu:{
+            menuId:'',
+            menuName:''
+          }
+        },
+        iframeUrl: 'page/member/list.html'
       }
     },
     computed: {
@@ -220,6 +172,8 @@
     mounted(){
       //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
       window.menuHandle = this.menuHandle
+      window.setFirstMenu = this.setFirstMenu
+      window.setSecondMenu = this.setSecondMenu
     },
     created() {
       //created 即通常初始化某些属性值，然后再渲染成视图
@@ -251,8 +205,20 @@
         //this.loading = true
         this.menuActived = item.menuid+""
         this.iframeUrl = item.url
+        this.activeMenu.thirdMenu.menuId=item.menuId;
+        this.activeMenu.thirdMenu.menuName=item.menuName;
         console.log(this.menuActived+"------------------")
+        debugger;
         //this.closeLoading(this.iframeUrl+"******************")
+      },
+      setFirstMenu(item){
+        debugger;
+        this.activeMenu.firstMenu.menuId=item.menuId;
+        this.activeMenu.firstMenu.menuName=item.menuName;
+      },
+      setSecondMenu(item){
+        this.activeMenu.secondMenu.menuId=item.menuId;
+        this.activeMenu.secondMenu.menuName=item.menuName;
       },
       closeLoading(){
         this.timer = null
@@ -269,23 +235,31 @@
         });
       },
       logout() {
-        axios.post("/employee/logout",this.userInfo).then(function (res){
-          //回调函数
-          if (res.code ==1){
-            localStorage.removeItem("userInfo")
-            window.location.href="/backend/page/login/login.html"
-          }
-        }).catch(function (error){
-          //接口异常回调
-          console.log(error)
-        })
-        /*
-        logoutApi().then((res)=>{
-          if(res.code === 1){
-            localStorage.removeItem('userInfo')
-            window.location.href = '/backend/page/login/login.html'
-          }
-        })*/
+        this.$confirm('确定要退出登录吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          axios.post("/employee/logout",this.userInfo).then(function (res){
+            //回调函数
+            if (res.code ==1){
+              localStorage.removeItem("userInfo")
+              window.sessionStorage.clear();
+              window.location.href="/backend/page/login/login.html";
+            }
+          }).catch(function (error){
+            //接口异常回调
+            console.log(error)
+          })
+          // 点击确定后  清除session用户信息
+          sessionStorage.clear()
+          // 跳转到登录页面
+          window.location.href="/backend/page/login/login.html";
+        }).catch(() => {
+          //页面跳转异常回调
+          sessionStorage.clear()
+          window.location.href="/backend/page/login/login.html";
+        });
       }
     }
   })
