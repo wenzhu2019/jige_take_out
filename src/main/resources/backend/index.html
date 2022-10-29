@@ -88,10 +88,10 @@
           <el-submenu :index="item.menuid+''"
                       v-for="item in items"
                       :key="item.menuid"
-                      @click="menuHandle(item)">
+                      @click.native="setFirstMenu(item)">
             <template slot="title"><i class="el-icon-message"></i>{{item.menuName}}</template>
             <!--遍历一级菜单取二级菜单-->
-            <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid" @click="setSecondMenu(nextitem)">
+            <el-submenu :index="nextitem.menuid+''" v-for="nextitem in item.nextMenuDto" :key="nextitem.menuid" @click.native="setSecondMenu(nextitem)">
               <template slot="title">{{nextitem.menuName}}</template>
               <!--遍历二级菜单取三级菜单-->
               <el-menu-item :index="finalitem.menuid+''"
@@ -107,9 +107,9 @@
       <el-main>
         <div>
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">{{activeMenu.firstMenu.menuName}}</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/' }" vue-show="activeMenu.firstMenu.menuName!=''">{{breadcrumb.firstbreadcrumb}}</el-breadcrumb-item>
+            <el-breadcrumb-item vue-show="activeMenu.secondMenu.menuName!=''">{{breadcrumb.secondbreadcrumb}}</el-breadcrumb-item>
+            <el-breadcrumb-item vue-show="activeMenu.thirdMenu.menuName!=''">{{breadcrumb.thirdbreadcrumb}}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <div class="app-main">
@@ -151,6 +151,7 @@
         items: [],
         userInfo: {},
         menuActived:'',
+        //双向数据绑定到1、2、3级菜单点击动作并存放当前点击的菜单信息 用于面包屑标签
         activeMenu:{
           firstMenu:{
             menuId:'',
@@ -163,6 +164,12 @@
             menuId:'',
             menuName:''
           }
+        },
+        //面包屑标签 一次性改变
+        breadcrumb:{
+          firstbreadcrumb:'',
+          secondbreadcrumb:'',
+          thirdbreadcrumb:'',
         },
         iframeUrl: 'page/member/list.html'
       }
@@ -204,9 +211,13 @@
         //可以控制iframe的显示和隐藏 这里不改变一直显示就可以
         //this.loading = true
         this.menuActived = item.menuid+""
-        this.iframeUrl = item.url
+        //当前路径./
+        this.iframeUrl = "./"+item.url
         this.activeMenu.thirdMenu.menuId=item.menuId;
         this.activeMenu.thirdMenu.menuName=item.menuName;
+        this.breadcrumb.firstbreadcrumb=this.activeMenu.firstMenu.menuName
+        this.breadcrumb.secondbreadcrumb=this.activeMenu.secondMenu.menuName
+        this.breadcrumb.thirdbreadcrumb=this.activeMenu.thirdMenu.menuName
         console.log(this.menuActived+"------------------")
         debugger;
         //this.closeLoading(this.iframeUrl+"******************")

@@ -2,11 +2,13 @@ package com.itecho.jige.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.itecho.jige.service.CategoryService;
 import com.itecho.jige.common.R;
 import com.itecho.jige.entity.Category;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,10 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+    @Value("${jige.page}")
+    private int page;
+    @Value("${jige.pageSize}")
+    private int pageSize;
 
     /**
      * 新增分类

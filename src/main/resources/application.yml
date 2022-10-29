@@ -18,5 +18,7 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
-reggie:
+jige:
   path: D:\Dev\jige\img\
+  page: 1
+  pageSize: 10
