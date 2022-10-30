@@ -1,6 +1,7 @@
 package com.itecho.jige.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itecho.jige.common.R;
 import com.itecho.jige.entity.Employee;
@@ -78,13 +79,18 @@ public class EmployeeController {
      * @param employee
      * @return
      */
-    @PostMapping
+    @PostMapping("/addEmployee")
     public R<String> save(HttpServletRequest request,@RequestBody Employee employee){
         log.info("新增员工，员工信息：{}",employee.toString());
 
         //设置初始密码123456，需要进行md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
+        QueryWrapper<Employee> queryWrapper=new QueryWrapper<>();
+        queryWrapper.select("max(employee_id) as employee_id");
+        Employee one = employeeService.getOne(queryWrapper);
+        //员工号取最大值+1
+        employee.setEmployeeId(one.getEmployeeId()+1);
         //employee.setCreateTime(LocalDateTime.now());
         //employee.setUpdateTime(LocalDateTime.now());
 

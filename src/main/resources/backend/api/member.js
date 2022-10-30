@@ -18,7 +18,7 @@ function enableOrDisableEmployee (params) {
 // 新增---添加员工
 function addEmployee (params) {
   return $axios({
-    url: '/employee',
+    url: '/employee/addEmployee',
     method: 'post',
     data: { ...params }
   })
