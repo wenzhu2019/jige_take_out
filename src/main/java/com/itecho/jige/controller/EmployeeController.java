@@ -56,6 +56,8 @@ public class EmployeeController {
 
         //6、登录成功，将员工id存入Session并返回登录成功结果
         request.getSession().setAttribute("employee",emp.getId());
+        //前端密码 先这样隐藏
+        employee.setPassword("******");
         return R.success(emp);
     }
 
