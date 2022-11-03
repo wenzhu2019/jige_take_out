@@ -206,7 +206,10 @@
             })
           },
           goBack(){
-            window.parent.menuHandle({
+            //TODO 返回返回上一个页面路径错误 http://localhost:8080/backend//backend/page/member/list.html 404自动拼接了/backend
+            //路径是缓存问题导致
+            console.log("**************************")
+            window.parent.menuEnter({
               id: '2',
               url: 'page/member/list.html',
               name: '员工管理'

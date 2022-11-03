@@ -110,6 +110,7 @@
             <el-breadcrumb-item :to="{ path: '/' }" vue-show="activeMenu.firstMenu.menuName!=''">{{breadcrumb.firstbreadcrumb}}</el-breadcrumb-item>
             <el-breadcrumb-item vue-show="activeMenu.secondMenu.menuName!=''">{{breadcrumb.secondbreadcrumb}}</el-breadcrumb-item>
             <el-breadcrumb-item vue-show="activeMenu.thirdMenu.menuName!=''">{{breadcrumb.thirdbreadcrumb}}</el-breadcrumb-item>
+            <el-breadcrumb-item vue-show="breadcrumb.enterbreadcurmb!=''">{{breadcrumb.enterbreadcurmb}}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <div class="app-main">
@@ -170,6 +171,7 @@
           firstbreadcrumb:'',
           secondbreadcrumb:'',
           thirdbreadcrumb:'',
+          enterbreadcurmb:''
         },
         iframeUrl: 'page/member/list.html'
       }
@@ -179,6 +181,7 @@
     mounted(){
       //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
       window.menuHandle = this.menuHandle
+      window.menuEnter = this.menuEnter
       window.setFirstMenu = this.setFirstMenu
       window.setSecondMenu = this.setSecondMenu
     },
@@ -218,8 +221,6 @@
         this.breadcrumb.firstbreadcrumb=this.activeMenu.firstMenu.menuName
         this.breadcrumb.secondbreadcrumb=this.activeMenu.secondMenu.menuName
         this.breadcrumb.thirdbreadcrumb=this.activeMenu.thirdMenu.menuName
-        console.log(this.menuActived+"------------------")
-        debugger;
         //this.closeLoading(this.iframeUrl+"******************")
       },
       setFirstMenu(item){
@@ -237,6 +238,16 @@
           this.loading = false
         },1000)
       },
+      <!-- 增删改查业务调用 -->
+      menuEnter(enterMenu) {
+        //可以控制iframe的显示和隐藏 这里不改变一直显示就可以
+        //this.loading = true
+        this.breadcrumb.enterbreadcurmb = enterMenu.name
+        //当前路径./
+        console.log(enterMenu.url)
+        this.iframeUrl = enterMenu.url
+        console.log(enterMenu.url)
+      },
       open() {
         const h = this.$createElement;
         this.$notify({
@@ -251,6 +262,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          debugger;
           axios.post("/employee/logout",this.userInfo).then(function (res){
             //回调函数
             if (res.code ==1){
@@ -267,9 +279,8 @@
           // 跳转到登录页面
           window.location.href="/backend/page/login/login.html";
         }).catch(() => {
-          //页面跳转异常回调
-          sessionStorage.clear()
-          window.location.href="/backend/page/login/login.html";
+          //点击取消后执行的操作
+          //alert("取消退出！")
         });
       }
     }

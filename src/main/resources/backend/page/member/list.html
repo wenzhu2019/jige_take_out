@@ -157,13 +157,13 @@
            // 添加
           addMemberHandle (st) {
             if (st === 'add'){
-              window.parent.menuHandle({
+              window.parent.menuEnter({
                 id: '2',
                 url: 'page/member/add.html',
                 name: '添加员工'
               },true)
             } else {
-              window.parent.menuHandle({
+              window.parent.menuEnter({
                 id: '2',
                 url: 'page/member/add.html?id='+st,
                 name: '修改员工'
