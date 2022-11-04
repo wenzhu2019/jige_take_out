@@ -164,18 +164,16 @@
                   addEmployee(params).then(res => {
                     if (res.code === 1) {
                       this.$message.success('员工添加成功！')
+                      //TODO添加成功后返回
+                      console.log("before st");
+                      console.log(st);
+                      console.log("after st");
                       if (!st) {
                         this.goBack()
                       } else {
-                        this.ruleForm = {
-                          username: '',
-                          'name': '',
-                          'phone': '',
-                          // 'password': '',
-                          // 'rePassword': '',/
-                          'sex': '男',
-                          'idNumber': ''
-                        }
+                        //清空表单 继续添加
+                        this.$refs.ruleForm.resetFields();
+                        this.ruleForm.sex='男';
                       }
                     } else {
                       this.$message.error(res.msg || '操作失败')
