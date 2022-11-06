@@ -225,7 +225,6 @@
         //this.closeLoading(this.iframeUrl+"******************")
       },
       setFirstMenu(item){
-        debugger;
         this.activeMenu.firstMenu.menuId=item.menuId;
         this.activeMenu.firstMenu.menuName=item.menuName;
       },
@@ -263,7 +262,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          debugger;
           axios.post("/employee/logout",this.userInfo).then(function (res){
             //回调函数
             if (res.code ==1){

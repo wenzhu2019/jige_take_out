@@ -62,6 +62,23 @@ public class EmployeeController {
         return R.success(emp);
     }
 
+    @PostMapping("/getEmployee")
+    public R<Page> getEmployee(HttpServletRequest request,@RequestBody Employee employee){
+
+        R<Page> pageInfo=new R<>();
+        //1、将页面提交的密码password进行md5加密处理
+        String password = employee.getPassword();
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+
+        //2、根据页面提交的员工编号查询数据库
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Employee::getEmployeeId,employee.getEmployeeId());
+        Employee emp = employeeService.getOne(queryWrapper);
+
+
+        return pageInfo;
+    }
+
     /**
      * 员工退出
      * @param request

@@ -100,6 +100,9 @@
             if (valid) {
               this.loading = true
               let res = await loginApi(this.loginForm)
+              console.log("11111111")
+              console.log(this.loginForm)
+              console.log("2222222222")
               if (String(res.code) === '1') {//1表示登录成功
                 localStorage.setItem('userInfo',JSON.stringify(res.data))
                 window.location.href= '/backend/index.html'
