@@ -1,7 +1,9 @@
 package com.itecho.jige.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,10 +21,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="JigeMemberCard对象", description="")
-public class JigeMemberCard extends Model<JigeMemberCard> {
+public class JigeMemberCard extends Model<JigeMemberCard> implements Serializable {
 
     private static final long serialVersionUID=1L;
 
+    @TableId
     @ApiModelProperty(value = "guid主键")
     private String id;
 
@@ -51,10 +54,10 @@ public class JigeMemberCard extends Model<JigeMemberCard> {
     private Integer validTime;
 
     @ApiModelProperty(value = "有效期开始日期")
-    private Date starttime;
+    private LocalDateTime starttime;
 
     @ApiModelProperty(value = "有效期结束日期")
-    private Date endtime;
+    private LocalDateTime endtime;
 
     @ApiModelProperty(value = "JSON备注")
     private String jsonRemark;
@@ -69,7 +72,13 @@ public class JigeMemberCard extends Model<JigeMemberCard> {
     private Integer state;
 
     @ApiModelProperty(value = "添加日期")
-    private Date addtime;
+    private LocalDateTime addtime;
+
+    //@TableField(exist = false)实体类需要用到 数据库不做映射
+    @TableField(exist = false)
+    private int page;
+    @TableField(exist = false)
+    private int pageSize;
 
 
     @Override
