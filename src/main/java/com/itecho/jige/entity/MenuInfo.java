@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="MenuInfo对象", description="")
-public class MenuInfo extends Model<MenuInfo> {
+public class MenuInfo extends Model<MenuInfo> implements Serializable{
 
     private static final long serialVersionUID=1L;
 
