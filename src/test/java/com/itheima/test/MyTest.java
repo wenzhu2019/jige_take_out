@@ -1,11 +1,13 @@
 package com.itheima.test;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.itecho.jige.JigeApplication;
 import com.itecho.jige.dto.MenuInfoDto;
 import com.itecho.jige.entity.Dish;
+import com.itecho.jige.entity.Employee;
 import com.itecho.jige.entity.MenuInfo;
 import com.itecho.jige.entity.User;
 import com.itecho.jige.mapper.DishMapper;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 @Slf4j
@@ -80,5 +84,28 @@ public class MyTest {
         
         menuList.put("menuList",menuInfoDtoList);
         log.info(menuList.toString());
+    }
+    @Test
+    void testTclass() throws ClassNotFoundException {
+        /*User user=new User();
+        user.setName("it is T class");
+        BaseTclass<User> t=new BaseTclass<>();*/
+
+
+        Class a=Class.forName("com.itecho.jige.entity."+"User");
+        Type type = a.getClass().getGenericSuperclass();
+        List<Employee> employees=new ArrayList<>();
+
+        Field[] fields = a.getFields();
+
+        Employee employee=new Employee();
+
+        LambdaQueryWrapper<Object> queryWrapper = new LambdaQueryWrapper();
+
+    }
+
+    @Test
+    void test03(){
+
     }
 }
