@@ -3,9 +3,7 @@ package com.itecho.jige.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itecho.jige.common.R;
-import com.itecho.jige.entity.Employee;
 import com.itecho.jige.entity.JigeMemberCard;
-import com.itecho.jige.entity.User;
 import com.itecho.jige.service.JigeMemberCardService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -53,5 +51,11 @@ public class JigeMemberCardController {
 
         service.page(pageInfo,queryWrapper);
         return R.success(pageInfo);
+    }
+    @PostMapping("/delete")
+    public R<String> deleteMember(@RequestBody String id){
+
+
+        return R.success("新增成功");
     }
 }
