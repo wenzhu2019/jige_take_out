@@ -39,7 +39,9 @@ public class LoginCheckFilter implements Filter{
                 "/front/**",
                 "/common/**",
                 "/user/sendMsg",
-                "/user/login"
+                "/user/login",
+                //码值获取不做过滤
+                "/Code/**"
         };
 
         //2、判断本次请求是否需要处理

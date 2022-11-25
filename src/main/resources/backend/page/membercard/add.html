@@ -28,6 +28,7 @@
           label="会员卡名称:"
           prop="cardName"
         >
+
           <el-input
             v-model="ruleForm.cardName"
             placeholder="请输入会员卡名称"
@@ -35,15 +36,15 @@
           />
         </el-form-item>
         <el-form-item
-          label="类型:"
-          prop="validTimeUnit"
+                label="类型:"
+                prop="validTimeUnit"
         >
-          <el-select v-model="ruleForm.validTimeUnitValue" placeholder="请选择">
+          <el-select v-model="validTimeUnit" placeholder="请选择">
             <el-option
-                    v-for="item in ruleForm.validTimeUnit"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in ruleForm.memberLevel"
+                    :key="item.item"
+                    :label="item.itemName"
+                    :value="item.item">
             </el-option>
           </el-select>
           <!--<el-radio-group v-model="ruleForm.validTimeUnit">
@@ -64,15 +65,24 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          label="会员级别:"
-          prop="memberLevel"
+                label="会员卡级别:"
+                prop="memberLevel"
         >
-          <el-radio-group v-model="ruleForm.memberLevel">
-            <el-radio label="白银"></el-radio>
-            <el-radio label="黄金"></el-radio>
-            <el-radio label="钻石"></el-radio>
-            <el-radio label="翡翠"></el-radio>
-          </el-radio-group>
+          <!--filterable:提供模糊搜索，clearable:提供删除所选项-->
+          <el-select v-model="memberLevelValue" filterable clearable placeholder="请选择">
+            <el-option
+                    v-for="item in ruleForm.memberLevel"
+                    :key="item.item"
+                    :label="item.itemName"
+                    :value="item.item">
+            </el-option>
+          </el-select>
+          <!--<el-radio-group v-model="ruleForm.validTimeUnit">
+            <el-radio label="周卡"></el-radio>
+            <el-radio label="月卡"></el-radio>
+            <el-radio label="季卡"></el-radio>
+            <el-radio label="年卡"></el-radio>
+          </el-radio-group>-->
         </el-form-item>
         <div class="subBox address">
           <el-form-item>
@@ -108,8 +118,11 @@
     <script src="../../api/member.js"></script>
     <script src="../../js/validate.js"></script>
     <script src="../../js/index.js"></script>
+    <script src="../../js/common.js"></script>
     <script>
       new Vue({
+        /*   created：通常用于初始化某些属性值，例如data中的数据，然后再渲染成视图。
+              mounted：通常在初始化页面完成后，对html的dom节点进行需要的操作。*/
         el: '#member-add-app',
         data() {
           return {
@@ -117,7 +130,7 @@
             actionType : '',
             ruleForm : {
                 'siteId': '',
-                'memberLevel': '白银',
+                'memberLevel': [],
                 'state': '有效',
                 'cardName': '',
               "validTimeUnit": [{
@@ -138,7 +151,9 @@
               }],
               validTimeUnitValue:'',
                 username: ''
-            }
+            },
+            carType:[],
+            memberLevelValue:'1'
           }
         },
         computed: {
@@ -163,8 +178,11 @@
           if (this.id) {
             this.init()
           }
+          this.getMemberLevel();
         },
         mounted() {
+          //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
+          window.getMemberLevel = this.getMemberLevel
         },
         methods: {
           async init () {
@@ -229,6 +247,17 @@
                 return false
               }
             })
+          },
+          getMemberLevel(){
+            let that = this;
+            axios.get('/Code/MemberLevel')
+                    .then(function(res) {
+                      console.log(res);
+                      that.ruleForm.memberLevel = res.data.data;
+                      debugger;
+                    })
+
+
           },
           goBack(){
             //TODO 返回返回上一个页面路径错误 http://localhost:8080/backend//backend/page/member/list.html 404自动拼接了/backend

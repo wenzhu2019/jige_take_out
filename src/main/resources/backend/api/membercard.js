@@ -1,5 +1,4 @@
 function getJigeMemberCardList (params) {
-    debugger;
     console.log(params)
     return $axios({
         url: '/membercard/page',

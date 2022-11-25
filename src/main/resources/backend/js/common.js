@@ -22,3 +22,10 @@ function getCommentList (url) {
         params
     })
 }
+function getCode (code) {
+    /*封装码值获取的js TODO*/
+     return $axios({
+        url: `/Code/${code}`,
+        method: 'get'
+    });
+}
