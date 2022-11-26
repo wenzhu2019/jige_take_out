@@ -35,13 +35,14 @@
             maxlength="20"
           />
         </el-form-item>
+        <!--:prop一定要用冒号 映射上数据库字段-->
         <el-form-item
                 label="类型:"
-                prop="validTimeUnit"
+                :prop="ruleForm.validTimeUnit"
         >
-          <el-select v-model="validTimeUnit" placeholder="请选择">
+          <el-select v-model="ruleForm.validTimeUnit" filterable clearable placeholder="请选择">
             <el-option
-                    v-for="item in ruleForm.memberLevel"
+                    v-for="item in validTimeUnitOption"
                     :key="item.item"
                     :label="item.itemName"
                     :value="item.item">
@@ -66,12 +67,12 @@
         </el-form-item>
         <el-form-item
                 label="会员卡级别:"
-                prop="memberLevel"
+                :prop="ruleForm.memberLevel"
         >
           <!--filterable:提供模糊搜索，clearable:提供删除所选项-->
-          <el-select v-model="memberLevelValue" filterable clearable placeholder="请选择">
+          <el-select v-model="ruleForm.memberLevel" filterable clearable placeholder="请选择">
             <el-option
-                    v-for="item in ruleForm.memberLevel"
+                    v-for="item in memberLevelOption"
                     :key="item.item"
                     :label="item.itemName"
                     :value="item.item">
@@ -130,30 +131,14 @@
             actionType : '',
             ruleForm : {
                 'siteId': '',
-                'memberLevel': [],
+                'memberLevel': '1',
                 'state': '有效',
                 'cardName': '',
-              "validTimeUnit": [{
-                value: '1',
-                label: '周卡'
-              }, {
-                value: '2',
-                label: '月卡'
-              }, {
-                value: '3',
-                label: '季卡'
-              }, {
-                value: '4',
-                label: '年卡'
-              }, {
-                value: '5',
-                label: '日卡'
-              }],
-              validTimeUnitValue:'',
-                username: ''
+              'validTimeUnit': 'D',
+                username: '',
             },
-            carType:[],
-            memberLevelValue:'1'
+            memberLevelOption: [],
+            validTimeUnitOption: []
           }
         },
         computed: {
@@ -179,10 +164,12 @@
             this.init()
           }
           this.getMemberLevel();
+          this.getValidTimeUnit();
         },
         mounted() {
           //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
           window.getMemberLevel = this.getMemberLevel
+          window.getValidTimeUnit = this.getValidTimeUnit
         },
         methods: {
           async init () {
@@ -253,11 +240,18 @@
             axios.get('/Code/MemberLevel')
                     .then(function(res) {
                       console.log(res);
-                      that.ruleForm.memberLevel = res.data.data;
+                      that.memberLevelOption = res.data.data;
                       debugger;
                     })
-
-
+          },
+          getValidTimeUnit(){
+            let that = this;
+            axios.get('/Code/ValidTimeUnit')
+                    .then(function(res) {
+                      console.log(res);
+                      that.validTimeUnitOption = res.data.data;
+                      debugger;
+                    })
           },
           goBack(){
             //TODO 返回返回上一个页面路径错误 http://localhost:8080/backend//backend/page/member/list.html 404自动拼接了/backend

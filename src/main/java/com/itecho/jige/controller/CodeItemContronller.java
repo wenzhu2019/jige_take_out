@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -51,7 +53,7 @@ public class CodeItemContronller {
      * @return com.itecho.jige.common.R<java.util.List<com.itecho.jige.entity.CodeItem>>
      **/
     @GetMapping("/{code}")
-    public R<List<CodeItem>> code(@PathVariable String code){
+    public R<List> code(@PathVariable String code){
 
         //码值获取
         CodeItem c=new CodeItem();
@@ -61,6 +63,7 @@ public class CodeItemContronller {
        LambdaQueryWrapper<CodeItem> codeWrapper=new LambdaQueryWrapper<>();
         codeWrapper.eq(CodeItem::getCode, code);
         List<CodeItem> codeItems = service.list(codeWrapper);
+        Map<String, String> codeMap = codeItems.stream().collect(Collectors.toMap(CodeItem::getItem, CodeItem::getItemName));
         return R.success(codeItems);
     }
 }
