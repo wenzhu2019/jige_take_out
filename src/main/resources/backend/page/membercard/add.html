@@ -57,7 +57,7 @@
         </el-form-item>
         <el-form-item
           label="状态:"
-          prop="state"
+          :prop="state"
         >
           <el-radio-group v-model="ruleForm.state">
             <el-radio label="有效"></el-radio>
@@ -132,7 +132,7 @@
             ruleForm : {
                 'siteId': '',
                 'memberLevel': '1',
-                'state': '有效',
+                'state': '1',
                 'cardName': '',
               'validTimeUnit': 'D',
                 username: '',
@@ -170,6 +170,7 @@
           //mouted 在渲染完html后调用 通常用于页面生成后的一些dom操作
           window.getMemberLevel = this.getMemberLevel
           window.getValidTimeUnit = this.getValidTimeUnit
+          window.addJigeCard = this.addJigeCard
         },
         methods: {
           async init () {
@@ -178,7 +179,7 @@
               if (String(res.code) === '1') {
                 console.log(res.data)
                 this.ruleForm = res.data
-                this.ruleForm.sex = res.data.sex === '0' ? '女' : '男'
+                /*this.ruleForm.sex = res.data.sex === '0' ? '女' : '男'*/
                 // this.ruleForm.password = ''
               } else {
                 this.$message.error(res.msg || '操作失败')
@@ -193,7 +194,7 @@
                     ...this.ruleForm,
                     sex: this.ruleForm.sex === '女' ? '0' : '1'
                   }
-                  addEmployee(params).then(res => {
+                  addJigeCard (params).then(res => {
                     if (res.code === 1) {
                       this.$message.success('员工添加成功！')
                       //TODO添加成功后返回
@@ -244,6 +245,14 @@
                       debugger;
                     })
           },
+          addJigeCard (params) {
+        debugger;
+        return $axios({
+          url: '/membercard/addJigeMemberCard',
+          method: 'post',
+          data: { ...params }
+        })
+      },
           getValidTimeUnit(){
             let that = this;
             axios.get('/Code/ValidTimeUnit')

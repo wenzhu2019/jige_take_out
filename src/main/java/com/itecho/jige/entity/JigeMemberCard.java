@@ -48,7 +48,7 @@ public class JigeMemberCard extends Model<JigeMemberCard> implements Serializabl
     private String cardSubtitle;
 
     @ApiModelProperty(value = "有效时长单位，周，月，季，年")
-    private Integer validTimeUnit;
+    private String validTimeUnit;
 
     @ApiModelProperty(value = "有效时长(周期)，表示几周，几个月")
     private Integer validTime;

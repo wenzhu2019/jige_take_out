@@ -11,6 +11,7 @@ import com.itecho.jige.mapper.CodeItemMapper;
 import com.itecho.jige.service.CodeItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,16 +46,17 @@ public class CodeItemContronller {
     CodeItemMapper mapper;
     /**
      * @Author liangwenzhu
-     * @Description 下拉框、多选框等码值映射 通过get请求传入所需码值
+     * @Description 下拉框、多选框等码值映射 通过get请求传入所需码值 加入redis缓存
      * @Date 1:35 2022/11/25
      * @Param
      * @param code
      * @return
      * @return com.itecho.jige.common.R<java.util.List<com.itecho.jige.entity.CodeItem>>
      **/
+
+    @Cacheable(value = "codeItemNo",key = "#p0")
     @GetMapping("/{code}")
     public R<List> code(@PathVariable String code){
-
         //码值获取
         CodeItem c=new CodeItem();
         c.setCode(code);

@@ -29,3 +29,13 @@ function getCode (code) {
         method: 'get'
     });
 }
+// 新增---添加员工
+/*
+function addObject (params) {
+    debugger;
+    return $axios({
+        url: '/membercard/addJigeMemberCard',
+        method: 'post',
+        data: { ...params }
+    })
+}*/
